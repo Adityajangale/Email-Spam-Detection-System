@@ -4,12 +4,14 @@ import email
 import re
 import string
 import os
+import nltk
 from email.header import decode_header
 from bs4 import BeautifulSoup
 import pickle
 from dotenv import load_dotenv
 from nltk.corpus import stopwords
 from datetime import datetime, timedelta
+
 
 # -------------------------------------------------
 # Load environment variables
@@ -26,7 +28,15 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL = pickle.load(open(os.path.join(BASE_DIR, "spam_model.pkl"), "rb"))
 VECT  = pickle.load(open(os.path.join(BASE_DIR, "vectorizer.pkl"), "rb"))
 
-STOPWORDS = set(stopwords.words("english"))
+import nltk
+from nltk.corpus import stopwords
+
+try:
+    STOPWORDS = set(stopwords.words("english"))
+except LookupError:
+    nltk.download("stopwords")
+    STOPWORDS = set(stopwords.words("english"))
+
 
 # -------------------------------------------------
 # Text cleaning helpers
